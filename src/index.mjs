@@ -72,6 +72,20 @@ app.use(passport.session());
 
 
 
+//Authentication middleware
+app.use((req, res, next) => {
+    if (req.path == '/api/v1/auth') {
+        return next();
+    }
+    if (req.isAuthenticated()) {
+        return next();
+    } else {
+        return res.status(401).send({status: "error", msg: "Unauthorized"})
+    }
+})
+
+
+
 
 //Router initialization and status endpoint
 app.get("/api/v1/status", (req, res) => {
