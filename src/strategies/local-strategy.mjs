@@ -1,6 +1,6 @@
 import passport from "passport";
 import { Strategy } from 'passport-local';
-
+import {db} from "../db/db";
 
 
 // passport local login strategy
@@ -32,7 +32,5 @@ export default passport.use(
         if (!success) {
             done(null, false, { message: 'Incorrect login' });
         }
-        // ------------------------------
     })
 )
-// ------------------------------
