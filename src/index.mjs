@@ -6,6 +6,7 @@ import passport from "passport";
 import './strategies/local-strategy.mjs';
 import { handleError } from './utils/helpers.mjs';
 import mysql from 'mysql2/promise';
+import cors from 'cors';
 
 
 
@@ -53,6 +54,14 @@ const sessionStore = new MySQLStore(mysqlStoreOptions, dbConnection);
 const app = express();
 const PORT = 3001;
 
+app.use(cors({
+    origin: [
+        'http://localhost:5173',
+        'http://localhost:3000',
+    ],
+    credentials: true
+}));
+
 app.use(cookieParser('key'))
 app.use(express.json())
 app.use(session({
@@ -74,7 +83,7 @@ app.use(passport.session());
 
 //Authentication middleware
 app.use((req, res, next) => {
-    if (req.path == '/api/v1/auth') {
+    if (req.path == '/api/v1/auth/login') {
         return next();
     }
     if (req.isAuthenticated()) {
