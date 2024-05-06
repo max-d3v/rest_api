@@ -1,14 +1,12 @@
 import passport from "passport";
 import { Strategy } from 'passport-local';
-import {db} from "../db/db";
-
-
+import { db } from "../db/db.mjs";
+import { queryDb, hashSenha } from "../utils/helpers.mjs";
+import bcrypt from  'bcrypt'
 // passport local login strategy
 passport.serializeUser((user, done) => {
     if (!user) {
         done(new Error("User not provided"), null);
-    } else if (!user.id) {
-        done(new Error("User ID not provided"), null);
     } else {
         done(null, user);
     }});
@@ -22,15 +20,34 @@ passport.deserializeUser((user, done) => {
 
 
 export default passport.use(
-    new Strategy({ usernameField: "name", passwordField: "senha" }, async (username, password, done) => {
-        var success = true;
-        const userData = {id: 1, username: "jon", password: "doe"}
+    new Strategy({ usernameField: "usuario", passwordField: "senha" }, async (username, password, done) => {
         //Login Logic
-        if (success) {
-            done(null, userData)
+        const query = "SELECT * FROM usuarios WHERE usuario = ?";
+        const response = await queryDb(query, [username]);
+        if (!response) {
+            return done(null, false, 'Credencias inválidas!');
         }
-        if (!success) {
-            done(null, false, { message: 'Incorrect login' });
+        if (response.length == 0) {
+            return done(null, false, 'Credencias inválidas!');    
         }
+
+        const responseObj = response[0];
+
+        console.log(responseObj.senha);
+        const senhaHashed = hashSenha(password);
+        const senhasCoincidem = await bcrypt.compare(password, responseObj.senha);
+
+        if (senhasCoincidem) {
+            const userObj = {
+                nome: responseObj.nome,
+                tipo: responseObj.tipo
+            }
+
+            done(null, userObj);
+            return
+        }
+
+        done(null, false, 'Credencias inválidas!');    
+        return        
     })
 )
