@@ -33,7 +33,6 @@ export default passport.use(
 
         const responseObj = response[0];
 
-        console.log(responseObj.senha);
         const senhaHashed = hashSenha(password);
         const senhasCoincidem = await bcrypt.compare(password, responseObj.senha);
 
