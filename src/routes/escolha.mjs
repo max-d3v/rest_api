@@ -97,12 +97,14 @@ router.post('/', checkSchema(CreateEscolhaValidation),  async (req, res) => {
     const {codigo_bicicleta} = selectedBicicleta;
 
     
-        const escolha = await prisma.escolha.create({
+        var escolha = await prisma.escolha.create({
             data: {
                 codigo_bicicleta,
-                codigo_interessado
+                codigo_interessado,
             }
         })
+        escolha.quadro_bicicleta = selectedQuadro;
+
 
         res.status(201).send({"data": escolha});
     }
