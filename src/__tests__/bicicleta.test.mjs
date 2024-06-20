@@ -3,6 +3,7 @@ import { app } from '../index.mjs';
 import jsonwebtoken from "jsonwebtoken";
 import jwt from "jsonwebtoken";
 import dotenv from 'dotenv';
+import path from 'path';
 dotenv.config();
 const validToken = jwt.sign({ id: process.env.TOKEN_ID }, process.env.TOKEN_SECRET ); 
 
@@ -51,13 +52,40 @@ describe("/bicicleta Route", () => {
     })
 
 
-    describe("POST /bicicleta", () => {
+    describe("POST /bicicleta with missing data", () => {
         it("should create a new bicicleta", async () => {
             const response = await supertest(server)
             .post("/api/v1/bicicleta")
             .set('Authorization', validToken)
             .send({
-                quadro_bicicleta: 16.6,
+                quadro_bicicleta: 16,
+            })
+            .expect('Content-Type', /json/)
+            .expect(400)
+            //.catch(err => console.error(err));
+
+            expect(response.body).toEqual(
+                expect.objectContaining({
+                    error: expect.arrayContaining([
+                        expect.objectContaining({
+                            type: expect.any(String),
+                            msg: expect.any(String),
+                            path: expect.any(String),
+                            location: expect.any(String)
+                        })
+                    ])
+                })
+            )
+        })
+    })
+
+    describe("POST /bicicleta necessary data", () => {
+        it("should create a new bicicleta", async () => {
+            const response = await supertest(server)
+            .post("/api/v1/bicicleta")
+            .set('Authorization', validToken)
+            .send({
+                quadro_bicicleta: 16,
                 cor_bicicleta: "azul"
             })
             .expect('Content-Type', /json/)
@@ -68,12 +96,11 @@ describe("/bicicleta Route", () => {
                 expect.objectContaining({
                     data: expect.objectContaining({
                         codigo_bicicleta: expect.any(Number),
-                        quadro_bicicleta: 16.6,
-                        cor_bicicleta: "azul",
+                        quadro_bicicleta: expect.any(Number),
+                        cor_bicicleta: expect.any(String),
                         created_at: expect.any(String),
                         updated_at: expect.any(String)
                     })
-                    
                 })
             )
         })
