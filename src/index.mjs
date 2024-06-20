@@ -1,136 +1,57 @@
 import express from 'express';
 import routerIndex from './routes/index.mjs';
-import cookieParser from 'cookie-parser';
 import session from 'express-session';
 import passport from "passport";
-import './strategies/local-strategy.mjs';
-import { handleError } from './utils/helpers.mjs';
-import mysql from 'mysql2/promise';
-import cors from 'cors';
+import jsonwebtoken from "jsonwebtoken";
+import dotenv from 'dotenv';
+dotenv.config();
+
+//const mode = "tst";
+const mode ="dev";
 
 
 
 
-//CREATE SWAGGER CONFIG:
-//const require = createRequire(import.meta.url); // Cria uma instância de require
-//const swaggerDocs = require('./swagger.json');
-// ------------------------------
-
-
-
-
-
-
-//Mysql store for sessions: 
-const MySQLStoreFactory = await import('express-mysql-session');
-const MySQLStore = MySQLStoreFactory.default(session);
-const mysqlStoreOptions = {
-    ttl: 60000 * 30,
-    expiration: 60000 * 30
-}
-
-
-
-const dbConnection = mysql.createPool({
-    host: "localhost",
-    user: "root",
-    password: "root",
-    database: "lar_renascer"
-});
-
-
-const sessionStore = new MySQLStore(mysqlStoreOptions, dbConnection);
-// ------------------------------
-
-
-
-
-
-
-
-
-
-//App creation, port definition and essential middlewares:
-const app = express();
+export const app = express();
 const PORT = 3001;
 
-app.use(cors({
-    origin: [
-        'http://localhost:5173',
-        'http://localhost:3000',
-    ],
-    credentials: true
-}));
 
-app.use(cookieParser('key'))
 app.use(express.json())
 app.use(session({
     secret: 'secret',
     saveUninitialized: false, 
     resave: true,
-    cookie: {
-        maxAge: 60000 * 30
-    },
-    store:  sessionStore
 }))
 
-app.use(passport.initialize());
-app.use(passport.session());
-// ------------------------------
 
-
-
-
-//Authentication middleware
 app.use((req, res, next) => {
-    if (req.path == '/api/v1/auth/login') {
-        return next();
+    const token = req.headers.authorization;
+    const tokenData = jsonwebtoken.verify(token, process.env.TOKEN_SECRET)
+    if (tokenData.id == process.env.TOKEN_ID) {
+        next();
     }
-    if (req.isAuthenticated()) {
-        return next();
-    } else {
-        return res.status(401).send({status: "error", msg: "Unauthorized"})
-    }
+    return;
 })
 
 
-
-
-//Router initialization and status endpoint
 app.get("/api/v1/status", (req, res) => {
     res.status(200).send({"status": "success", "msg": "Ok sistems"})
 })
 app.use('/api/v1', routerIndex)
-// ------------------------------
 
-
-
-
-
-//Error handling middleware
 app.use((err, req, res, next) => {
     if (err) {
-        var errorMsg;
-        if (err !== 'Error') {
-            errorMsg = err.message;
+        if ( mode == "dev" ) {
+            console.error(err);
         }
-
-        console.error(err.stack); // Log do detalhe do erro
-        handleError(res, errorMsg, 500);
+        res.status(500).send({"error": err});
     } else {
         next();
     }
 });
-// ------------------------------
 
-
-
-
-
-//app initialization, running on port defined
-app.listen(PORT, () => {
-    console.log('running');
-
-    
-})
-// ------------------------------
+if (mode == "dev") {
+    app.listen(PORT, () => {
+        console.log('running on port ' + PORT);
+    });    
+}
