@@ -1,14 +1,16 @@
 import { Router } from "express";
-import exampleRouter from "./example.mjs";
+import bicicletaRouter from "./bicicleta.mjs";
 import authRouter from "./auth.mjs";
-
-
+import escolhaRouter from "./escolha.mjs";
+import interessadoRouter from "./interessado.mjs";
 
 const router = Router();
 
 //Router initialization
-router.use(exampleRouter);
-router.use(authRouter);
+router.use("/bicicleta", bicicletaRouter);
+router.use("/escolha", escolhaRouter);
+router.use("/interessado", interessadoRouter);
+router.use("/auth",authRouter);
 // ----------------------------
 
 
