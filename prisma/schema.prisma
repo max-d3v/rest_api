@@ -12,3 +12,26 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+model bicicleta {
+  codigo_bicicleta Int @id @default(autoincrement()) @unique
+  quadro_bicicleta Float 
+  cor_bicicleta String @db.VarChar(255)
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+}
+
+model interessado {
+  codigo_interessado Int @id @default(autoincrement()) @unique
+  nome_interessado String @db.VarChar(255)
+  fone_interessado String @db.VarChar(255)
+  email_interessado String @db.VarChar(255)
+  altura_interessado_cm Int
+}
+
+model escolha {
+  codigo_escolha Int @id @default(autoincrement()) @unique
+  data_escolha DateTime @default(now())
+  codigo_interessado Int
+  codigo_bicicleta Int
+}
