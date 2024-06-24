@@ -11,7 +11,7 @@ const validToken = jwt.sign({ id: process.env.TOKEN_ID }, process.env.TOKEN_SECR
 let server
 
 beforeAll((done) => {
-    const PORT = 3005;
+    const PORT = 3006;
     server = app.listen(PORT, () => {
         console.log('Test server running on port ' + PORT);
         done();
@@ -27,11 +27,11 @@ afterAll((done) => {
 
 
 
-describe("/bicicleta Route", () => {
-    describe("GET /bicicleta/todas", () => {
-        it("should return a list of bicicletas", async () => {
+describe("/interessado Route", () => {
+    describe("GET /interessado/todos", () => {
+        it("should return a list of interessados", async () => {
             const response = await supertest(server)
-            .get("/api/v1/bicicleta/todas")
+            .get("/api/v1/interessado/todos")
             .set('Authorization', validToken)
             .expect('Content-Type', /json/)
             .expect(200)
@@ -40,11 +40,11 @@ describe("/bicicleta Route", () => {
             expect(response.body).toEqual(
                 expect.arrayContaining([
                     expect.objectContaining({
-                        codigo_bicicleta: expect.any(Number),
-                        quadro_bicicleta: expect.any(Number),
-                        cor_bicicleta: expect.any(String),
-                        created_at: expect.any(String),
-                        updated_at: expect.any(String)
+                        codigo_interessado: expect.any(Number),
+                        nome_interessado: expect.any(String),
+                        fone_interessado: expect.any(String),
+                        email_interessado: expect.any(String),
+                        altura_interessado_cm: expect.any(Number)
                     })
                 ])
             )
@@ -52,8 +52,8 @@ describe("/bicicleta Route", () => {
     })
 
 
-    describe("POST /bicicleta with missing data", () => {
-        it("should return validation Error", async () => {
+    describe("POST /interessado with missing data", () => {
+        it("should return validation Errors", async () => {
             const response = await supertest(server)
             .post("/api/v1/bicicleta")
             .set('Authorization', validToken)
@@ -79,14 +79,16 @@ describe("/bicicleta Route", () => {
         })
     })
 
-    describe("POST /bicicleta necessary data", () => {
-        it("should create a new bicicleta", async () => {
+    describe("POST /interessado with necessary data", () => {
+        it("should create a new interessado", async () => {
             const response = await supertest(server)
-            .post("/api/v1/bicicleta")
+            .post("/api/v1/interessado")
             .set('Authorization', validToken)
             .send({
-                quadro_bicicleta: 16,
-                cor_bicicleta: "azul"
+                nome_interessado: 16,
+                fone_interessado: "azul",
+                email_interessado: "email@interessadoTeste.com",
+                altura_interessado_cm: 180
             })
             .expect('Content-Type', /json/)
             .expect(201)
@@ -95,21 +97,21 @@ describe("/bicicleta Route", () => {
             expect(response.body).toEqual(
                 expect.objectContaining({
                     data: expect.objectContaining({
-                        codigo_bicicleta: expect.any(Number),
-                        quadro_bicicleta: expect.any(Number),
-                        cor_bicicleta: expect.any(String),
-                        created_at: expect.any(String),
-                        updated_at: expect.any(String)
+                        codigo_interessado: expect.any(Number),
+                        nome_interessado: expect.any(String),
+                        fone_interessado: expect.any(String),
+                        email_interessado: expect.any(String),
+                        altura_interessado_cm: expect.any(Number)
                     })
                 })
             )
         })
     })
 
-    describe("GET /bicicleta/:id with existing ID", () => {
-        it("should return bicicleta data", async () => {
+    describe("GET /interessado/:id with existing ID", () => {
+        it("should return interessado data", async () => {
             const response = await supertest(server)
-            .get("/api/v1/bicicleta/20")
+            .get("/api/v1/bicicleta/1")
             .set('Authorization', validToken)
             .expect('Content-Type', /json/)
             .expect(200)
@@ -118,21 +120,21 @@ describe("/bicicleta Route", () => {
             expect(response.body).toEqual(
                 expect.objectContaining({
                     data: expect.objectContaining({
-                        codigo_bicicleta: 20,
-                        quadro_bicicleta: expect.any(Number),
-                        cor_bicicleta: expect.any(String),
-                        created_at: expect.any(String),
-                        updated_at: expect.any(String)
+                        codigo_interessado: expect.any(Number),
+                        nome_interessado: expect.any(String),
+                        fone_interessado: expect.any(String),
+                        email_interessado: expect.any(String),
+                        altura_interessado_cm: expect.any(Number)
                     })
                 })
             )
         })
     })
 
-    describe("GET /bicicleta/:id with non-existing ID", () => {
-        it("should return 404 bicicleta not found", async () => {
+    describe("GET /interessado/:id with non-existing ID", () => {
+        it("should return 404 interessado not found", async () => {
             const response = await supertest(server)
-            .get("/api/v1/bicicleta/9999")
+            .get("/api/v1/interessado/9999")
             .set('Authorization', validToken)
             .expect('Content-Type', /json/)
             .expect(404)
@@ -140,17 +142,17 @@ describe("/bicicleta Route", () => {
 
             expect(response.body).toEqual(
                 expect.objectContaining({
-                    error: "Bicicleta not found"
+                    error: "Interessado not found"
                 })
             )
         })
     })
 
 
-    describe("GET /bicicleta/:id with invalid ID", () => {
+    describe("GET /interessado/:id with invalid ID", () => {
         it("should return 400 Invalid ID", async () => {
             const response = await supertest(server)
-            .get("/api/v1/bicicleta/abc")
+            .get("/api/v1/interessado/abc")
             .set('Authorization', validToken)
             .expect('Content-Type', /json/)
             .expect(400)
@@ -164,15 +166,17 @@ describe("/bicicleta Route", () => {
         })
     });
 
-    describe("PATCH /bicicleta", () => {
+    describe("PATCH /interessado", () => {
         describe("With invalid ID", () => {
             it("should return Error invalid ID", async () => {
                 const response = await supertest(server)
-                .patch("/api/v1/bicicleta/asd")
+                .patch("/api/v1/interessado/asd")
                 .set('Authorization', validToken)
                 .send({
-                    quadro_bicicleta: 16,
-                    cor_bicicleta: "azul"
+                    nome_interessado: "nome",
+                    email_interessado: "email2@interessado.com",
+                    fone_interessado: "fone",
+                    altura_interessado_cm: 180
                 })
                 .expect('Content-Type', /json/)
                 .expect(400)
@@ -187,11 +191,10 @@ describe("/bicicleta Route", () => {
         describe("With invalid data", () => {
             it("Should return validation Error", async () => {
                 const response = await supertest(server)
-                .patch("/api/v1/bicicleta/1")
+                .patch("/api/v1/interessado/1")
                 .set('Authorization', validToken)
                 .send({
-                    quadro_bicicleta: "16",
-                    cor_bicicleta: 123
+                    email_interessado: 123123
                 })
                 .expect('Content-Type', /json/)
                 .expect(400)
@@ -211,21 +214,23 @@ describe("/bicicleta Route", () => {
             })
         })
 
-        describe("With non-existing bike", () => {
-            it("should return 404 Bicicleta not found", async () => {
+        describe("With non-existing interessado", () => {
+            it("should return 404 interessado not found", async () => {
                 const response = await supertest(server)
-                .patch("/api/v1/bicicleta/999999")
+                .patch("/api/v1/interessado/999999")
                 .set('Authorization', validToken)
                 .send({
-                    quadro_bicicleta: 16,
-                    cor_bicicleta: "azul"
+                    nome_interessado: "nome",
+                    email_interessado: "xana@lixo.fdp",
+                    fone_interessado: "fone",
+                    altura_interessado_cm: 180
                 })
                 .expect('Content-Type', /json/)
                 .expect(404)
 
                 expect(response.body).toEqual(
                     expect.objectContaining({
-                        error: "Bicicleta not found"
+                        error: "Interessado not found"
                     })
                 )
 
@@ -233,13 +238,15 @@ describe("/bicicleta Route", () => {
         })
 
         describe("all valid data", () => {
-            it("should return updated bike", async () => {
+            it("should return updated interessado", async () => {
                 const response = await supertest(server)
-                .patch("/api/v1/bicicleta/20")
+                .patch("/api/v1/interessado/20")
                 .set('Authorization', validToken)
                 .send({
-                    quadro_bicicleta: 16,
-                    cor_bicicleta: "azule"
+                    nome_interessado: "nome",
+                    email_interessado: "email@email.com",
+                    fone_interessado: "fone",
+                    altura_interessado_cm: 180
                 })
                 .expect('Content-Type', /json/)
                 .expect(200)
@@ -247,11 +254,11 @@ describe("/bicicleta Route", () => {
                 expect(response.body).toEqual(
                     expect.objectContaining({
                         data: expect.objectContaining({
-                            codigo_bicicleta: 20,
-                            quadro_bicicleta: 16,
-                            cor_bicicleta: "azule",
-                            created_at: expect.any(String),
-                            updated_at: expect.any(String)
+                            codigo_interessado: expect.any(Number),
+                            nome_interessado: expect.any(String),
+                            fone_interessado: expect.any(String),
+                            email_interessado: expect.any(String),
+                            altura_interessado_cm: expect.any(Number)
                         })
                     })
                 )
