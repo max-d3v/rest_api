@@ -41,7 +41,7 @@ describe("/escolha Route", () => {
                         codigo_escolha: expect.any(Number),
                         data_escolha: expect.any(String),
                         codigo_interessado: expect.any(Number),
-                        codigo_bicicleta: expect.any(Number),
+                        codigos_bicicletas: expect.any(Array),
                         data_escolha: expect.any(String),
                     })
                 ])
@@ -62,7 +62,7 @@ describe("/escolha Route", () => {
                 expect.objectContaining({
                     data: expect.objectContaining({
                         codigo_escolha: 1,
-                        codigo_bicicleta: expect.any(Number),
+                        codigos_bicicletas: expect.any(Array),
                         codigo_interessado: expect.any(Number),
                         data_escolha: expect.any(String),
                     })
@@ -125,7 +125,7 @@ describe("/escolha Route", () => {
                         data: expect.objectContaining({
                             codigo_escolha: expect.any(Number),
                             codigo_interessado: 2,
-                            codigo_bicicleta: expect.any(Number),
+                            codigos_bicicletas: expect.any(Array),
                             data_escolha: expect.any(String),
                             quadro_bicicleta: 14
                         })
@@ -150,7 +150,7 @@ describe("/escolha Route", () => {
                         data: expect.objectContaining({
                             codigo_escolha: expect.any(Number),
                             codigo_interessado: 1,
-                            codigo_bicicleta: expect.any(Number),
+                            codigos_bicicletas: expect.any(Array),
                             data_escolha: expect.any(String),
                             quadro_bicicleta: 17
                         })
@@ -174,7 +174,7 @@ describe("/escolha Route", () => {
                         data: expect.objectContaining({
                             codigo_escolha: expect.any(Number),
                             codigo_interessado: 3,
-                            codigo_bicicleta: expect.any(Number),
+                            codigos_bicicletas: expect.any(Array),
                             data_escolha: expect.any(String),
                             quadro_bicicleta: 16
                         })
