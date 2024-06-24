@@ -33,5 +33,5 @@ model escolha {
   codigo_escolha Int @id @default(autoincrement()) @unique
   data_escolha DateTime @default(now())
   codigo_interessado Int
-  codigo_bicicleta Int
+  codigos_bicicletas Int[]
 }
