@@ -75,3 +75,54 @@ export const CreateInteressadoValidation = {
         }
     }
 }
+
+export const AlterBicicletaValidation = {
+    quadro_bicicleta: {
+        optional: { options: { nullable: true } },
+        isFloat: {
+            errorMessage: "Quadro must be a number",
+        },
+    },
+    cor_bicicleta: {
+        optional: { options: { nullable: true } },
+        isString: {
+            errorMessage: "Cor must be a string",
+        },
+    }
+}
+
+export const AlterInteressadoValidation = {
+    nome_interessado: {
+        optional: { options: { nullable: true } },
+        isString: {
+            errorMessage: "Nome must be a string",
+        },
+    },
+    email_interessado: {
+        optional: { options: { nullable: true } },
+        isEmail: {
+            errorMessage: "Email must be a valid email",
+        },
+    },
+    fone_interessado: {
+        optional: { options: { nullable: true } },
+        isString: {
+            errorMessage: "Fone must be a string",
+        },
+    },
+    altura_interessado_cm: {
+        optional: { options: { nullable: true } },
+        isInt: {
+            errorMessage: "Altura must be a number",
+        },
+    }
+}
+
+export const alterEscolhaValidation = {
+    codigo_interessado: {
+        optional: { options: { nullable: true } },
+        isInt: {
+            errorMessage: "Codigo escolhido must be a number",
+        },
+    }
+}
