@@ -149,7 +149,6 @@ router.patch("/:id", checkSchema(AlterBicicletaValidation), async (req, res) => 
             res.status(404).send({"error": "Bicicleta not found"});
             return;
         }
-
         const bicicletaUpdated = await prisma.bicicleta.update({
             where: {
                 codigo_bicicleta: parseInt(id)
@@ -159,7 +158,6 @@ router.patch("/:id", checkSchema(AlterBicicletaValidation), async (req, res) => 
                 cor_bicicleta
             }
         });
-
         res.status(200).send({"data": bicicletaUpdated});
     }
     catch(err) {

@@ -109,7 +109,7 @@ describe("/bicicleta Route", () => {
     describe("GET /bicicleta/:id with existing ID", () => {
         it("should return bicicleta data", async () => {
             const response = await supertest(server)
-            .get("/api/v1/bicicleta/20")
+            .get("/api/v1/bicicleta/1")
             .set('Authorization', validToken)
             .expect('Content-Type', /json/)
             .expect(200)
@@ -118,7 +118,7 @@ describe("/bicicleta Route", () => {
             expect(response.body).toEqual(
                 expect.objectContaining({
                     data: expect.objectContaining({
-                        codigo_bicicleta: 20,
+                        codigo_bicicleta: 1,
                         quadro_bicicleta: expect.any(Number),
                         cor_bicicleta: expect.any(String),
                         created_at: expect.any(String),
@@ -235,7 +235,7 @@ describe("/bicicleta Route", () => {
         describe("all valid data", () => {
             it("should return updated bike", async () => {
                 const response = await supertest(server)
-                .patch("/api/v1/bicicleta/20")
+                .patch("/api/v1/bicicleta/2")
                 .set('Authorization', validToken)
                 .send({
                     quadro_bicicleta: 16,
@@ -247,7 +247,7 @@ describe("/bicicleta Route", () => {
                 expect(response.body).toEqual(
                     expect.objectContaining({
                         data: expect.objectContaining({
-                            codigo_bicicleta: 20,
+                            codigo_bicicleta: 2,
                             quadro_bicicleta: 16,
                             cor_bicicleta: "azule",
                             created_at: expect.any(String),

@@ -85,7 +85,7 @@ describe("/interessado Route", () => {
             .post("/api/v1/interessado")
             .set('Authorization', validToken)
             .send({
-                nome_interessado: 16,
+                nome_interessado: "interessadoTeste",
                 fone_interessado: "azul",
                 email_interessado: "email@interessadoTeste.com",
                 altura_interessado_cm: 180
@@ -111,7 +111,7 @@ describe("/interessado Route", () => {
     describe("GET /interessado/:id with existing ID", () => {
         it("should return interessado data", async () => {
             const response = await supertest(server)
-            .get("/api/v1/bicicleta/1")
+            .get("/api/v1/interessado/1")
             .set('Authorization', validToken)
             .expect('Content-Type', /json/)
             .expect(200)
@@ -240,7 +240,7 @@ describe("/interessado Route", () => {
         describe("all valid data", () => {
             it("should return updated interessado", async () => {
                 const response = await supertest(server)
-                .patch("/api/v1/interessado/20")
+                .patch("/api/v1/interessado/2")
                 .set('Authorization', validToken)
                 .send({
                     nome_interessado: "nome",

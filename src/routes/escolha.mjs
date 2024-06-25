@@ -96,6 +96,7 @@ router.post('/', checkSchema(CreateEscolhaValidation),  async (req, res) => {
             codigo_interessado,
         }
     })
+    escolha.quadro_bicicleta = selectedQuadro;
     res.status(201).send({"data": escolha});
     }
     catch(err) {

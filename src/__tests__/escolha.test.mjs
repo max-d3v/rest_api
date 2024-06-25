@@ -9,7 +9,7 @@ const validToken = jwt.sign({ id: process.env.TOKEN_ID }, process.env.TOKEN_SECR
 let server
 
 beforeAll((done) => {
-    const PORT = 3006;
+    const PORT = 3007;
     server = app.listen(PORT, () => {
         console.log('Test server running on port ' + PORT);
         done();
@@ -114,7 +114,7 @@ describe("/escolha Route", () => {
                 const response = await supertest(server)
                 .post("/api/v1/escolha")
                 .set('Authorization', validToken)
-                .send({ codigo_interessado: 2 })
+                .send({ codigo_interessado: 3 })
                 .expect('Content-Type', /json/)
                 .expect(201)
 
@@ -124,7 +124,7 @@ describe("/escolha Route", () => {
                     expect.objectContaining({
                         data: expect.objectContaining({
                             codigo_escolha: expect.any(Number),
-                            codigo_interessado: 2,
+                            codigo_interessado: 3,
                             codigos_bicicletas: expect.any(Array),
                             data_escolha: expect.any(String),
                             quadro_bicicleta: 14
@@ -136,8 +136,32 @@ describe("/escolha Route", () => {
 
 
 
-        describe("POST /escolha with client 180cm", () => {
+        describe("POST /escolha with client 190cm", () => {
             it("should create escolha with bicieta_quadro 17", async () => {
+                const response = await supertest(server)
+                .post("/api/v1/escolha")
+                .set('Authorization', validToken)
+                .send({ codigo_interessado: 2 })
+                .expect('Content-Type', /json/)
+                .expect(201)
+
+                expect(response.body).toEqual(
+                    expect.objectContaining({
+                        data: expect.objectContaining({
+                            codigo_escolha: expect.any(Number),
+                            codigo_interessado: 2,
+                            codigos_bicicletas: expect.any(Array),
+                            data_escolha: expect.any(String),
+                            quadro_bicicleta: 17
+                        })
+                    })
+                )
+            })
+        })
+
+
+        describe("POST /escolha with client 165cm", () => {
+            it("should create escolha with bicicleta_quadro 16", async () => {
                 const response = await supertest(server)
                 .post("/api/v1/escolha")
                 .set('Authorization', validToken)
@@ -150,30 +174,6 @@ describe("/escolha Route", () => {
                         data: expect.objectContaining({
                             codigo_escolha: expect.any(Number),
                             codigo_interessado: 1,
-                            codigos_bicicletas: expect.any(Array),
-                            data_escolha: expect.any(String),
-                            quadro_bicicleta: 17
-                        })
-                    })
-                )
-            })
-        })
-
-
-        describe("POST /escolha with client 165cm", () => {
-            it("should create escolha with bicieta_quadro 16", async () => {
-                const response = await supertest(server)
-                .post("/api/v1/escolha")
-                .set('Authorization', validToken)
-                .send({ codigo_interessado: 3 })
-                .expect('Content-Type', /json/)
-                .expect(201)
-
-                expect(response.body).toEqual(
-                    expect.objectContaining({
-                        data: expect.objectContaining({
-                            codigo_escolha: expect.any(Number),
-                            codigo_interessado: 3,
                             codigos_bicicletas: expect.any(Array),
                             data_escolha: expect.any(String),
                             quadro_bicicleta: 16
